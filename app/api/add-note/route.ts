@@ -8,9 +8,10 @@ export async function POST(req: NextRequest) {
 
         const body = await req.json();
 
-        const token = req.headers.get('authorization')?.split(' ')[1];
-
-        if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        const token = req.cookies.get('token')?.value;
+        if (!token) {
+            return NextResponse.json({ error: 'No authentication token' }, { status: 401 });
+        }
 
         const { userId } = verifyToken(token)
 

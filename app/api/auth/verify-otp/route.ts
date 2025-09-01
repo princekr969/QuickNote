@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import prisma from '../../../utils/prisma';
 import { signToken } from '../../../utils/auth';
-
-const prisma = new PrismaClient();
 
 export async function POST(req: NextRequest) {
 
   try {
+
     const { email, otp } = await req.json();
 
     const storedOtp = await prisma.oTP.findFirst({
@@ -34,10 +33,24 @@ export async function POST(req: NextRequest) {
 
     // Generate JWT token
     const token = signToken({ userId: user.id });
-    return NextResponse.json({ 
-      token, 
-      user: { id: user.id, email: user.email, name: user.name } 
+
+    
+    // Create response
+    const response = NextResponse.json({ 
+      user: { id: user.id, email: user.email },
+      message: 'Verification successful'
     });
+
+    // Set token in HTTP-only cookie
+    response.cookies.set('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+      path: '/'
+    });
+
+    return response;
 
   } catch (error) {
     
