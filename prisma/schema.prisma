@@ -18,9 +18,8 @@ model User {
   id          String   @id @default(cuid())
   email       String   @unique
   password    String?
+  dateOfBirth DateTime?
   isVerified  Boolean  @default(false)
-  name        String?
-  avatar      String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
  
