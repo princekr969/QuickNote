@@ -6,17 +6,15 @@ import { noteSchema } from '../../../utils/validation';
 export async function POST(req: NextRequest) {
     try {
 
-        const body = await req.json();
+        const {title, content} = await req.json();
 
         const token = req.cookies.get('token')?.value;
         if (!token) {
             return NextResponse.json({ error: 'No authentication token' }, { status: 401 });
         }
 
-        const { userId } = verifyToken(token)
-
-        const { title, content } = noteSchema.parse(body);
-
+        const { userId } = verifyToken(token);
+        
         const note = await prisma.note.create({
             data: { title, content, userId }
         });
