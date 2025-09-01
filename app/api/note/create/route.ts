@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '../../utils/prisma';
-import { verifyToken } from '../../utils/auth';
-import { noteSchema } from '../../utils/validation';
+import prisma from '../../../utils/prisma';
+import { verifyToken } from '../../../utils/auth';
+import { noteSchema } from '../../../utils/validation';
 
 export async function POST(req: NextRequest) {
     try {

@@ -41,13 +41,11 @@ export async function POST(req: NextRequest) {
       message: 'Verification successful'
     });
 
-    // Set token in HTTP-only cookie
     response.cookies.set('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      maxAge: 60 * 60 * 24 * 7, // 7 days
-      path: '/'
+      maxAge: 60 * 60 * 24, // 24 hours
     });
 
     return response;
